@@ -1,7 +1,7 @@
 ## 1️⃣ Create Project
 
 - Project type: **ASP.NET Core Web API**  
-- Framework: **.NET 8.0**  
+- Framework: **.NET 10.0**  
 - Settings:
   - Use Controllers  
   - Enable HTTPS  
@@ -50,9 +50,10 @@ VALUES
 ```
 
 ## 3️⃣ Install NuGet Packages (Package Manager Console)
-- Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 8.0.22
-- Install-Package Microsoft.EntityFrameworkCore.Design -Version 8.0.22
-- Install-Package Microsoft.EntityFrameworkCore.Tools -Version 8.0.22
+- Install-Package Microsoft.EntityFrameworkCore.SqlServer 
+- Install-Package Microsoft.EntityFrameworkCore.Design 
+- Install-Package Microsoft.EntityFrameworkCore.Tools
+- Install-Package Swashbuckle.AspNetCore.SwaggerUI
 
 ## 4️⃣ Scaffold Database (from existing DB - Package Manager Console)
 ```
@@ -101,6 +102,26 @@ builder.Services.AddDbContext<HorsesDBContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "API v1");
+    });
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
 ```
 
 ## 7️⃣ Create Controller (Scaffolded API Controller – EntityFramework)
